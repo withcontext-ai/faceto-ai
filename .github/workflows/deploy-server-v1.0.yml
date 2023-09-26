@@ -1,0 +1,74 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy container app to Azure Web App - faceto-ai
+
+on:
+  push:
+    branches:
+      - deploy/server/v1.0
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: 'ubuntu-latest'
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Log in to registry
+      uses: docker/login-action@v2
+      with:
+        registry: https://withcontext.azurecr.io/
+        username: ${{ secrets.AzureAppService_ContainerUsername_1f9a6cb882b749169a2149e1a1b9bc78 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_1ca4e85d884f42069ca1a20180596cb2 }}
+
+    - name: Build and push container image to registry
+      uses: docker/build-push-action@v3
+      with:
+        push: true
+        tags: withcontext.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_1f9a6cb882b749169a2149e1a1b9bc78 }}/faceto-ai:${{ github.sha }}
+        file: ./server/Dockerfile
+
+    - name: Install alsa and related packages
+      run: |
+        sudo apt-get update && sudo apt-get install -y --no-install-recommends \
+        ca-certificates  \
+        netbase \
+        ffmpeg \
+        libasound2-dev \
+        && sudo rm -rf /var/lib/apt/lists/ \
+        && sudo apt-get autoremove -y && sudo apt-get autoclean -y
+
+    - name: Run Test
+      run: |
+        cd server
+        go test -coverprofile=../coverage.out -covermode=atomic ./...
+
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./coverage.out
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'faceto-ai'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_6b4a0bbec7054389bab98fad7399d51f }}
+        images: 'withcontext.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_1f9a6cb882b749169a2149e1a1b9bc78 }}/faceto-ai:${{ github.sha }}'
