@@ -31,7 +31,7 @@ jobs:
       with:
         push: true
         tags: withcontext.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_c457ec06453449cfb24c2a02ac823ede }}/withcontext/faceto-ai:${{ github.sha }}
-        file: ./Dockerfile
+        file: ./server/Dockerfile
 
   deploy:
     runs-on: ubuntu-latest
