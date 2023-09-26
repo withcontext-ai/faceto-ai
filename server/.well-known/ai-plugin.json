@@ -1,0 +1,25 @@
+{
+  "schema_version": "v1",
+  "name_for_model": "FaceToAI",
+  "name_for_human": "FaceToAI Tool",
+  "description_for_model": "Through this tool, a real-time video conversation with AI can be realized. This tool does not generate video or images, it is just a real-time video tool.\n\nDescription of the function of the tool:\n1. Real-time video conversations: The tool allows users to have real-time video conversations with an AI. This can be useful in a variety of scenarios, such as virtual meetings, educational sessions, or even entertainment.\n\n2. Role specification: The AI can be programmed to play a specific role during the conversation. This is done using the prompt.role parameter in the /v1/room/link interface. For example, the AI could be programmed to act as a teacher, a therapist, a customer service representative, and so on.\n\n3. Question asking: The AI can be programmed to actively ask a list of questions to the user. This is done using the prompt.questions parameter in the /v1/room/link interface. If the user wants to ask their own questions, this list can be left blank.\n\n4. Conversation transcript: After the video call ends, the conversation transcript can be retrieved through the /v1/room/transcript interface. The is_bot parameter is used to distinguish between the AI and user's dialogue. The conversation can be displayed to users in the form of a dialogue, for example:\nAI: {text}\nUser: {text}.",
+  "description_for_human": "A tool for real-time video conversations with AI, we call it FaceToAI.",
+  "auth": {
+    "type": "oauth",
+    "client_url": "https://faceto-ai.withcontext.ai/v1/auth/redirect",
+    "scope": "link:transcript:video:audio",
+    "authorization_url": "https://faceto-ai.withcontext.ai/v1/auth",
+    "authorization_content_type": "application/json",
+    "verification_tokens": {
+      "openai": "d4df1f82db3c487eb660dc033029fb83"
+    }
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://faceto-ai.withcontext.ai/.well-known/openapi.yaml",
+    "has_user_authentication": false
+  },
+  "logo_url": "https://faceto-ai.withcontext.ai/.well-known/logo.png",
+  "contact_email": "panohire@gmail.com",
+  "legal_info_url": "https://faceto-ai.withcontext.ai/.well-known/introduction.html"
+}

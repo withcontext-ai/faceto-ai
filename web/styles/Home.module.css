@@ -1,0 +1,11 @@
+.startSelect {
+  font-family: var(--lk-font-family);
+  padding: 0.8rem 1rem;
+  background-color: var(--lk-control-bg);
+  border: 1px solid var(--lk-border-color);
+  border-radius: var(--lk-border-radius);
+  appearance: none;
+  width: 100%;
+  background: url("/assets/arrow.png") no-repeat 100%;
+  background-size: contain;
+}

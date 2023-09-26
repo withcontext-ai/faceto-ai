@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package voice.v1;
+
+import "google/api/annotations.proto";
+//import "validate/validate.proto";
+
+option go_package = "faceto-ai/api/voice/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.voice.v1";
+option java_outer_classname = "FaceToProtoV1";
+
+// The AI Voice API service definition.
+service Voice {
+
+  // Get Voices
+  rpc Voices (VoicesRequest) returns (VoicesReply) {
+    option (google.api.http) = {
+      get: "/v1/voices",
+    };
+  }
+
+  // Get Voice
+  rpc GetVoice (GetVoiceRequest) returns (VoiceConfig) {
+    option (google.api.http) = {
+      get: "/v1/voices/{voice_id}",
+    };
+  }
+
+  // Edit Voice
+  rpc EditVoice (EditVoiceRequest) returns (Nil) {
+    option (google.api.http) = {
+      post: "/v1/voices/{voice_id}/settings/edit",
+      body: "*",
+    };
+  }
+
+  // Add Voice
+  rpc AddVoice (AddVoiceRequest) returns (Nil) {
+    option (google.api.http) = {
+      post: "/v1/voices/add",
+      body: "*",
+    };
+  }
+
+}
+
+message Nil {
+}
+
+message VoicesRequest {
+  string category = 1;
+}
+
+message VoicesReply {
+  repeated VoiceConfig voices = 1;
+}
+
+message VoiceConfig {
+  string name = 1;
+  string voice_id = 2 [json_name="voice_id"];
+  string preview_url = 3 [json_name="preview_url"];
+  string category = 4;
+  VoiceSetting settings = 5;
+  VoiceLabel labels = 6;
+}
+
+message VoiceSetting {
+  float similarity_boost = 1 [json_name="similarity_boost"];
+  float stability = 2 [json_name="stability"];
+}
+
+message VoiceLabel {
+  string accent = 1;
+  string age = 2;
+  string gender = 3;
+}
+
+message GetVoiceRequest {
+  string voice_id = 1 [json_name="voice_id"];
+  bool with_settings = 2 [json_name="with_settings"];
+}
+
+message EditVoiceRequest {
+  string voice_id = 1 [json_name="voice_id"];
+  float similarity_boost = 2 [json_name="similarity_boost"];
+  float stability = 3 [json_name="stability"];
+}
+
+message AddVoiceRequest {
+  string name = 1;
+  string labels = 2;
+  string description = 3;
+  repeated string files = 4;
+}
+
+message FileUploadReply {
+  string url = 1;
+}

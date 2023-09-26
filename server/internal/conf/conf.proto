@@ -1,0 +1,106 @@
+syntax = "proto3";
+package kratos.api;
+
+option go_package = "faceto-ai/internal/conf;conf";
+
+import "google/protobuf/duration.proto";
+
+enum ServerDebug {
+  false = 0;
+  true = 1;
+}
+
+message Bootstrap {
+  Server server = 1;
+  Data data = 2;
+  ThirdApi third_api = 3;
+  Storage storage = 4;
+  string env = 5;
+  Event event = 6;
+  LiveKit livekit = 7;
+  GcpCredentials gcp_credentials = 8;
+}
+
+message Server {
+  message HTTP {
+    string network = 1;
+    string addr = 2;
+    google.protobuf.Duration timeout = 3;
+  }
+  message GRPC {
+    string network = 1;
+    string addr = 2;
+    google.protobuf.Duration timeout = 3;
+  }
+  HTTP http = 1;
+  GRPC grpc = 2;
+  ServerDebug debug = 3;
+}
+
+message Data {
+  message Database {
+    string driver = 1;
+    string source = 2;
+    bool debug = 3;
+  }
+  message Redis {
+    string network = 1;
+    string addr = 2;
+    google.protobuf.Duration read_timeout = 3;
+    google.protobuf.Duration write_timeout = 4;
+  }
+  Database database = 1;
+  Redis redis = 2;
+}
+
+message ThirdApi {
+  message Openai {
+    string key = 1;
+    string host = 2;
+  }
+  message Eleventlabs{
+    string key = 1;
+  }
+  Openai openai = 1;
+  Eleventlabs eleventlabs = 2;
+}
+
+message Storage {
+  message AzureBlob {
+    string host = 1;
+    string cdn_host = 2;
+    string account_name = 3;
+    string account_key = 4;
+    string container_name = 5;
+    string connection_string = 6;
+  }
+  message AzureQueue {
+    string connection_string = 1;
+    string index_queue_name = 2;
+  }
+  AzureBlob azure_blob = 1;
+  AzureQueue azure_queue = 2;
+}
+
+message Event {
+  message AzureHubs {
+    string connection_string = 1;
+    string default_hub_name = 2;
+    string index_hub_name = 3;
+    string blob_connection_string = 4;
+    string blob_container_name = 5;
+  }
+  AzureHubs azure_hubs = 1;
+}
+
+message LiveKit {
+  string bot_identity = 1; // bot identity name
+  string url = 2;
+  string api_key = 3;
+  string secret_key = 4;
+  string token_secret = 5;
+}
+
+message GcpCredentials {
+  string path = 1;
+}

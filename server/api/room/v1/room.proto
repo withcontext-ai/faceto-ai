@@ -1,0 +1,138 @@
+syntax = "proto3";
+
+package interview.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "faceto-ai/api/room/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.room.v1";
+option java_outer_classname = "RoomProtoV1";
+
+// The Room Service definition.
+service Room {
+  // Health check
+  rpc Health (HealthRequest) returns (HelloReply) {
+    option (google.api.http) = {
+      get: "/",
+    };
+  }
+
+  // CheckRoom check room valid
+  rpc CheckRoom (CheckRoomRequest) returns (CheckRoomReply) {
+    option (google.api.http) = {
+      post: "/check/{name}",
+      body:"*",
+    };
+  }
+
+  // JoinRoom local join room
+  rpc JoinRoom (JoinRoomRequest) returns (JoinRoomReply) {
+    option (google.api.http) = {
+      post: "/join/{name}",
+      body:"*",
+    };
+  }
+
+  // RoomTranscript. Get conversation transcripts in real time
+  rpc RoomTranscriptOnline (RoomTranscriptRequest) returns (RoomTranscriptReply) {
+    option (google.api.http) = {
+      post: "/{name}/transcript",
+      body:"*",
+    };
+  }
+
+  // RoomTranscript. Get room transcript in real time or cache, compatible with above interface
+  rpc RoomTranscript (RoomTranscriptRequest) returns (RoomTranscriptReply) {
+    option (google.api.http) = {
+      post: "/v1/room/transcript",
+      body:"*",
+    };
+  }
+
+  // Set Room Voice
+  rpc SetRoomVoice (SetRoomVoiceRequest) returns (NilReply) {
+    option (google.api.http) = {
+      post: "/v1/room/set_voice",
+      body:"*",
+    };
+  }
+}
+
+message HelloReply {
+ string message = 1;
+}
+
+message NilReply {
+
+}
+
+message HealthRequest {
+
+}
+
+message JoinRoomRequest {
+  string name = 1;
+}
+
+message JoinRoomReply {
+  string name = 1;
+  string sid = 2;
+}
+
+message WebhookRequest {
+
+}
+
+message CheckRoomRequest {
+  string name = 1;
+  string c = 2;
+}
+
+message CheckRoomReply {
+  bool valid = 1;
+}
+
+message RoomTranscriptRequest {
+  string name = 1;
+  uint32 page = 2;
+}
+
+message RoomTranscriptReply {
+  message Transcript {
+    message List {
+      //
+      bool is_bot = 1 [json_name="is_bot"];
+      // current name of this talk
+      string name = 2;
+      string text = 3;
+      uint64 timestamp = 4;
+    }
+    uint32 total = 1;
+    repeated List list = 2;
+  }
+  message Room {
+    string name = 1;
+    string sid = 2;
+  }
+  message Vod {
+    string egress_id = 1 [json_name="egress_id"];
+    string url = 2;
+    uint32 status = 3;
+    uint32 start_time = 4 [json_name="start_time"];
+    uint32 complete_time = 5 [json_name="complete_time"];
+    uint32 duration = 6 [json_name="duration"];
+  }
+  // version
+  string version = 1;
+  // room info
+  Room room = 2;
+  // room transcript list
+  Transcript transcript = 3;
+  Vod vod = 4;
+}
+
+message SetRoomVoiceRequest {
+  string room_name = 1 [json_name="room_name"];
+  string voice_id = 2 [json_name="voice_id"];
+}

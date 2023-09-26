@@ -1,0 +1,4 @@
+export LIVEKIT_API_KEY=
+export LIVEKIT_API_SECRET=
+export LIVEKIT_URL=
+export NEXT_PUBLIC_LK_TOKEN_ENDPOINT=/api/token

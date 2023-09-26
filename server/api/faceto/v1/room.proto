@@ -1,0 +1,135 @@
+syntax = "proto3";
+
+package faceto.v1;
+
+import "google/api/annotations.proto";
+//import "validate/validate.proto";
+
+option go_package = "faceto-ai/api/faceto/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.faceto.v1";
+option java_outer_classname = "FaceToProtoV1";
+
+// The FaceTo API service definition.
+service Room {
+  // Token Create API Auth Token
+  rpc Token (TokenRequest) returns (TokenReply) {
+    option (google.api.http) = {
+      post: "/v1/token",
+      body:"*",
+    };
+  }
+  // Token Get Room Link
+  rpc Link (RoomLinkRequest) returns (RoomLinkReply) {
+    option (google.api.http) = {
+      post: "/v1/room/link",
+      body:"*",
+    };
+  }
+
+  // OAuth Create API
+  rpc AuthCreate (AuthCreateRequest) returns (AuthCreateReply) {
+    option (google.api.http) = {
+      post: "/v1/auth/create",
+      body:"*",
+    };
+  }
+
+  // OAuth Token API
+  rpc Auth (AuthRequest) returns (AuthReply) {
+    option (google.api.http) = {
+      post: "/v1/auth",
+      body:"*",
+    };
+  }
+
+  // OAuth Token Exchange API
+  rpc AuthExchange (AuthExchangeRequest) returns (AuthReply) {
+    option (google.api.http) = {
+      post: "/v1/auth/exchange",
+      body:"*",
+    };
+  }
+}
+
+message NilReply {
+}
+
+message TokenRequest {
+  string key = 1;
+  int32 expire_at = 2 [json_name = "expire_at"];
+}
+
+message TokenReply {
+  string token = 1;
+  string expire_at = 2 [json_name = "expire_at"];
+}
+
+message RoomLinkRequest {
+  message ChatAPI {
+    string api = 1;
+    string key = 2;
+  }
+  message Config {
+    int32 duration = 1;
+    string greeting = 2;
+    string voice_id = 3 [json_name = "voice_id"];
+    string username = 4 [json_name = "username"];
+    string botname = 5 [json_name = "botname"];
+  }
+  message Webhook {
+    string api = 1;
+    string key = 2;
+  }
+  message Prompt {
+    string role = 1;
+    repeated string questions = 2;
+  }
+  ChatAPI chatapi = 1;
+  Config config = 2;
+  Webhook webhook = 3;
+  Prompt prompt = 4;
+}
+
+message RoomLinkReply {
+  string token = 1;
+  string name = 2;
+  string link = 3;
+}
+
+message AuthRedirectRequest {
+  string response_type = 1 [json_name="response_type"];
+  string client_id = 2 [json_name="client_id"];
+  string scope = 3;
+  string redirect_uri = 4 [json_name="redirect_uri"];
+  string state = 5;
+}
+
+message AuthCreateRequest {
+  string key = 1;
+  string grant_scope = 2 [json_name="grant_scope"];
+}
+message AuthCreateReply {
+  string client_id = 2 [json_name="client_id"];
+  string client_secret = 3 [json_name="client_secret"];
+}
+
+message AuthRequest {
+  string grant_type = 1 [json_name="grant_type"];
+  string client_id = 2 [json_name="client_id"];
+  string client_secret = 3 [json_name="client_secret"];
+  string code = 4 [json_name="code"];
+  string redirect_uri = 5 [json_name="redirect_uri"];
+  string refresh_token = 6 [json_name="refresh_token"];
+}
+
+message AuthReply {
+  string access_token = 1 [json_name="access_token"];
+  string token_type = 2 [json_name="token_type"];
+  string refresh_token = 3 [json_name="refresh_token"];
+  int32 expires_in = 4 [json_name="expires_in"];
+}
+
+message AuthExchangeRequest {
+  string refresh_token = 1 [json_name="refresh_token"];
+}

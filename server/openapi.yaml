@@ -1,0 +1,616 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: ""
+    version: 0.0.1
+paths:
+    /:
+        get:
+            tags:
+                - Room
+            description: Health check
+            operationId: Room_Health
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/interview.v1.HelloReply'
+    /check/{name}:
+        post:
+            tags:
+                - Room
+            description: CheckRoom check room valid
+            operationId: Room_CheckRoom
+            parameters:
+                - name: name
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/interview.v1.CheckRoomRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/interview.v1.CheckRoomReply'
+    /join/{name}:
+        post:
+            tags:
+                - Room
+            description: JoinRoom local join room
+            operationId: Room_JoinRoom
+            parameters:
+                - name: name
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/interview.v1.JoinRoomRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/interview.v1.JoinRoomReply'
+    /v1/auth:
+        post:
+            tags:
+                - Room
+            description: OAuth Token API
+            operationId: Room_Auth
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/faceto.v1.AuthRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/faceto.v1.AuthReply'
+    /v1/auth/create:
+        post:
+            tags:
+                - Room
+            description: OAuth Create API
+            operationId: Room_AuthCreate
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/faceto.v1.AuthCreateRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/faceto.v1.AuthCreateReply'
+    /v1/auth/exchange:
+        post:
+            tags:
+                - Room
+            description: OAuth Token Exchange API
+            operationId: Room_AuthExchange
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/faceto.v1.AuthExchangeRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/faceto.v1.AuthReply'
+    /v1/room/link:
+        post:
+            tags:
+                - Room
+            description: Token Get Room Link
+            operationId: Room_Link
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/faceto.v1.RoomLinkRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/faceto.v1.RoomLinkReply'
+    /v1/room/set_voice:
+        post:
+            tags:
+                - Room
+            description: Set Room Voice
+            operationId: Room_SetRoomVoice
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/interview.v1.SetRoomVoiceRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/interview.v1.NilReply'
+    /v1/room/transcript:
+        post:
+            tags:
+                - Room
+            description: RoomTranscript. Get room transcript in real time or cache, compatible with above interface
+            operationId: Room_RoomTranscript
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/interview.v1.RoomTranscriptRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/interview.v1.RoomTranscriptReply'
+    /v1/token:
+        post:
+            tags:
+                - Room
+            description: Token Create API Auth Token
+            operationId: Room_Token
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/faceto.v1.TokenRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/faceto.v1.TokenReply'
+    /v1/voices:
+        get:
+            tags:
+                - Voice
+            description: Get Voices
+            operationId: Voice_Voices
+            parameters:
+                - name: category
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/voice.v1.VoicesReply'
+    /v1/voices/add:
+        post:
+            tags:
+                - Voice
+            description: Add Voice
+            operationId: Voice_AddVoice
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/voice.v1.AddVoiceRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/voice.v1.Nil'
+    /v1/voices/{voice_id}:
+        get:
+            tags:
+                - Voice
+            description: Get Voice
+            operationId: Voice_GetVoice
+            parameters:
+                - name: voice_id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: with_settings
+                  in: query
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/voice.v1.VoiceConfig'
+    /v1/voices/{voice_id}/settings/edit:
+        post:
+            tags:
+                - Voice
+            description: Edit Voice
+            operationId: Voice_EditVoice
+            parameters:
+                - name: voice_id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/voice.v1.EditVoiceRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/voice.v1.Nil'
+    /{name}/transcript:
+        post:
+            tags:
+                - Room
+            description: RoomTranscript. Get conversation transcripts in real time
+            operationId: Room_RoomTranscriptOnline
+            parameters:
+                - name: name
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/interview.v1.RoomTranscriptRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/interview.v1.RoomTranscriptReply'
+components:
+    schemas:
+        faceto.v1.AuthCreateReply:
+            type: object
+            properties:
+                client_id:
+                    type: string
+                client_secret:
+                    type: string
+        faceto.v1.AuthCreateRequest:
+            type: object
+            properties:
+                key:
+                    type: string
+                grant_scope:
+                    type: string
+        faceto.v1.AuthExchangeRequest:
+            type: object
+            properties:
+                refresh_token:
+                    type: string
+        faceto.v1.AuthReply:
+            type: object
+            properties:
+                access_token:
+                    type: string
+                token_type:
+                    type: string
+                refresh_token:
+                    type: string
+                expires_in:
+                    type: integer
+                    format: int32
+        faceto.v1.AuthRequest:
+            type: object
+            properties:
+                grant_type:
+                    type: string
+                client_id:
+                    type: string
+                client_secret:
+                    type: string
+                code:
+                    type: string
+                redirect_uri:
+                    type: string
+                refresh_token:
+                    type: string
+        faceto.v1.RoomLinkReply:
+            type: object
+            properties:
+                token:
+                    type: string
+                name:
+                    type: string
+                link:
+                    type: string
+        faceto.v1.RoomLinkRequest:
+            type: object
+            properties:
+                chatapi:
+                    $ref: '#/components/schemas/faceto.v1.RoomLinkRequest_ChatAPI'
+                config:
+                    $ref: '#/components/schemas/faceto.v1.RoomLinkRequest_Config'
+                webhook:
+                    $ref: '#/components/schemas/faceto.v1.RoomLinkRequest_Webhook'
+                prompt:
+                    $ref: '#/components/schemas/faceto.v1.RoomLinkRequest_Prompt'
+        faceto.v1.RoomLinkRequest_ChatAPI:
+            type: object
+            properties:
+                api:
+                    type: string
+                key:
+                    type: string
+        faceto.v1.RoomLinkRequest_Config:
+            type: object
+            properties:
+                duration:
+                    type: integer
+                    format: int32
+                greeting:
+                    type: string
+                voice_id:
+                    type: string
+                username:
+                    type: string
+                botname:
+                    type: string
+        faceto.v1.RoomLinkRequest_Prompt:
+            type: object
+            properties:
+                role:
+                    type: string
+                questions:
+                    type: array
+                    items:
+                        type: string
+        faceto.v1.RoomLinkRequest_Webhook:
+            type: object
+            properties:
+                api:
+                    type: string
+                key:
+                    type: string
+        faceto.v1.TokenReply:
+            type: object
+            properties:
+                token:
+                    type: string
+                expire_at:
+                    type: string
+        faceto.v1.TokenRequest:
+            type: object
+            properties:
+                key:
+                    type: string
+                expire_at:
+                    type: integer
+                    format: int32
+        interview.v1.CheckRoomReply:
+            type: object
+            properties:
+                valid:
+                    type: boolean
+        interview.v1.CheckRoomRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                c:
+                    type: string
+        interview.v1.HelloReply:
+            type: object
+            properties:
+                message:
+                    type: string
+        interview.v1.JoinRoomReply:
+            type: object
+            properties:
+                name:
+                    type: string
+                sid:
+                    type: string
+        interview.v1.JoinRoomRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+        interview.v1.NilReply:
+            type: object
+            properties: {}
+        interview.v1.RoomTranscriptReply:
+            type: object
+            properties:
+                version:
+                    type: string
+                    description: version
+                room:
+                    $ref: '#/components/schemas/interview.v1.RoomTranscriptReply_Room'
+                transcript:
+                    $ref: '#/components/schemas/interview.v1.RoomTranscriptReply_Transcript'
+                vod:
+                    $ref: '#/components/schemas/interview.v1.RoomTranscriptReply_Vod'
+        interview.v1.RoomTranscriptReply_Room:
+            type: object
+            properties:
+                name:
+                    type: string
+                sid:
+                    type: string
+        interview.v1.RoomTranscriptReply_Transcript:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: uint32
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/interview.v1.Transcript_List'
+        interview.v1.RoomTranscriptReply_Vod:
+            type: object
+            properties:
+                egress_id:
+                    type: string
+                url:
+                    type: string
+                status:
+                    type: integer
+                    format: uint32
+                start_time:
+                    type: integer
+                    format: uint32
+                complete_time:
+                    type: integer
+                    format: uint32
+                duration:
+                    type: integer
+                    format: uint32
+        interview.v1.RoomTranscriptRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                page:
+                    type: integer
+                    format: uint32
+        interview.v1.SetRoomVoiceRequest:
+            type: object
+            properties:
+                room_name:
+                    type: string
+                voice_id:
+                    type: string
+        interview.v1.Transcript_List:
+            type: object
+            properties:
+                is_bot:
+                    type: boolean
+                name:
+                    type: string
+                    description: current name of this talk
+                text:
+                    type: string
+                timestamp:
+                    type: integer
+                    format: uint64
+        voice.v1.AddVoiceRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                labels:
+                    type: string
+                description:
+                    type: string
+                files:
+                    type: array
+                    items:
+                        type: string
+        voice.v1.EditVoiceRequest:
+            type: object
+            properties:
+                voice_id:
+                    type: string
+                similarity_boost:
+                    type: number
+                    format: float
+                stability:
+                    type: number
+                    format: float
+        voice.v1.Nil:
+            type: object
+            properties: {}
+        voice.v1.VoiceConfig:
+            type: object
+            properties:
+                name:
+                    type: string
+                voice_id:
+                    type: string
+                preview_url:
+                    type: string
+                category:
+                    type: string
+                settings:
+                    $ref: '#/components/schemas/voice.v1.VoiceSetting'
+                labels:
+                    $ref: '#/components/schemas/voice.v1.VoiceLabel'
+        voice.v1.VoiceLabel:
+            type: object
+            properties:
+                accent:
+                    type: string
+                age:
+                    type: string
+                gender:
+                    type: string
+        voice.v1.VoiceSetting:
+            type: object
+            properties:
+                similarity_boost:
+                    type: number
+                    format: float
+                stability:
+                    type: number
+                    format: float
+        voice.v1.VoicesReply:
+            type: object
+            properties:
+                voices:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/voice.v1.VoiceConfig'
+tags:
+    - name: Room
+      description: The Room Service definition.
+    - name: Room
+      description: The FaceTo API service definition.
+    - name: Voice
+      description: The AI Voice API service definition.

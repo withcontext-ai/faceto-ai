@@ -33,19 +33,38 @@ Authorization: Bearer <token>
 Now, we have opened the API for accessing video links. Please refer to the interface description in the **API Docs** directory for specific usage. Please feel free to contact us if you have any questions.
 [Get FaceTo-AI Room Link](https://apifox.com/apidoc/shared-1fbfe214-d536-41b7-8209-bb504e876572/api-85139473)
 # 🔥 About ChatAPI
-If you want to know how chatapi is designed, please go here.[About ChatAPI](./server/docs/about_chatapi.md)
+If you want to know how chatapi is designed, please go here.[About ChatAPI](./docs/about_chatapi.md)
 # 🔥 Flow
-Please see our overall design flowchart here.[Flow](./server/docs/flow.md)
+Please see our overall design flowchart here.[Flow](./docs/flow.md)
 
 ---
 # 👉 About Project
 
+## Install Kratos
+```
+go install github.com/go-kratos/kratos/cmd/kratos/v2@latest
+```
+## Generate other auxiliary files by Makefile
+```
+# Download and update dependencies
+make init
+# Generate API files (include: pb.go, http, grpc, validate, swagger) by proto file
+make api
+# Generate all files
+make all
+```
+## Automated Initialization (wire)
+```
+# install wire
+go get github.com/google/wire/cmd/wire
+
+# generate wire
+cd cmd/server
+wire
+```
 
 ## Directory structure
 ```
-# web     # frontend folder
-.
-# server  # backend folder
 .
 ├── api                           # api proto file
 │   ├── error                     # error proto
@@ -78,35 +97,10 @@ Please see our overall design flowchart here.[Flow](./server/docs/flow.md)
 └── third_party                   # thrid proto pkg
 ```
 
-# ⏩ About Server Kratos
-[https://go-kratos.dev/](https://go-kratos.dev/)
-## Install Kratos
-```
-go install github.com/go-kratos/kratos/cmd/kratos/v2@latest
-```
-## Generate other auxiliary files by Makefile
-```
-# Download and update dependencies
-make init
-# Generate API files (include: pb.go, http, grpc, validate, swagger) by proto file
-make api
-# Generate all files
-make all
-```
-## Automated Initialization (wire)
-```
-# install wire
-go get github.com/google/wire/cmd/wire
-
-# generate wire
-cd cmd/server
-wire
-```
-
 # ⏩ Running Locally
 ## Run Front
 ```
-# From the web/ directory
+# From the front/ directory
 yarn install && yarn dev
 ```
 
@@ -120,20 +114,7 @@ make dev
 make prod
 ```
 
-## Run Docker
-```
-# From the / directory
-# makefile
-make docker-all
-```
-
-```
-# From the / directory
-# docker-compose
-docker-compose up
-```
-
-## Local Join Room
+## Join Room
 Once both services are running you can navigate to http://localhost:3000. There's one more step needed when running locally. When deployed, KITT is spawned via a LiveKit webhook, but locally - the webhook will have no way of reaching your local lkgpt-service that's running. So you'll have to manually call an API to spawn KITT:
 
 ```
@@ -141,49 +122,4 @@ Once both services are running you can navigate to http://localhost:3000. There'
 curl -XPOST http://localhost:8001/join/<room_name>
 ```
 
-# 🔑 About Env Key
-You need to modify the `config.env.tpl` file in the configs folder to `config.env`, and then add your own key and configuration information.
-The following are comments for all variables:
 
-```
-# env dev or prod
-export FACETOAI_ENV=
-# debug dev for true
-export DEBUG=
-
-# mysql connect string
-export FACETO_DATA_DATABASE_SOURCE=""
-
-# openai key or host
-export OPENAI_KEY=
-export OPENAI_HOST=
-
-# storage 
-# Since our service is deployed on Azure, there are Azure related configurations here.
-export AZURE_BLOB_HOST=
-export AZURE_BLOB_CDN_HOST=
-export AZURE_ACCOUNT_NAME=
-export AZURE_ACCOUNT_KEY=
-export AZURE_BLOB_CONTAINER_NAME=
-export AZURE_CONNECTION_STRING=""
-export INDEX_QUEUE_NAME=
-
-# livekit
-# see https://docs.livekit.io/realtime/
-export LIVEKIT_NAME=
-export LIVEKIT_URL=
-export LIVEKIT_API_KEY=
-export LIVEKIT_SECRET_KEY=
-
-# google gcp json file
-# This is the permission authentication file of Google Cloud. You need to put the file on CDN or anywhere else. Just fill in the URL address here.
-export GOOGLE_GCP_CREDENTIALS=
-
-# eleventlabs key
-# see https://docs.elevenlabs.io/welcome/introduction
-export ELEVEN_API_KEY=
-
-# logsnag key
-# see https://docs.logsnag.com/get-started/quick-start
-export LOGSNAG_API_KEY=
-```

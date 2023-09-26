@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package error.v1;
+
+import "errors/errors.proto";
+
+option go_package = "api_gen/error/v1;v1";
+
+enum ErrorReason {
+  option (errors.default_code) = 500;
+
+  BAD_REQUEST = 0 [(errors.code) = 400];
+  UNAUTHORIZED = 1 [(errors.code) = 401];
+  FORBIDDEN = 2 [(errors.code) = 403];
+  NOT_FOUND = 3 [(errors.code) = 404];
+  REQUEST_TIMEOUT = 4 [(errors.code) = 408];
+  CONTENT_TOO_LARGE = 5 [(errors.code) = 413];
+
+  INTERNAL_SERVER_ERROR = 6 [(errors.code) = 500];
+  GATEWAY_TIMEOUT = 7 [(errors.code) = 504];
+}

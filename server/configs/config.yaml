@@ -1,0 +1,58 @@
+env: "${FACETOAI_ENV:}"
+server:
+  debug: "${DEBUG:false}"
+  http:
+    addr: 0.0.0.0:8001
+    timeout: 30s
+  grpc:
+    addr: 0.0.0.0:9001
+    timeout: 1s
+data:
+  database:
+    debug: false
+    driver: mysql
+    # Replace with env variables, if not present, use the default value.
+    source: "${FACETO_DATA_DATABASE_SOURCE:}"
+  redis:
+    addr: 127.0.0.1:6379
+    read_timeout: 0.2s
+    write_timeout: 0.2s
+
+storage:
+  azure_blob:
+    host: "${AZURE_BLOB_HOST:}"
+    cdn_host: "${AZURE_BLOB_CDN_HOST:}"
+    container_name: "${AZURE_BLOB_CONTAINER_NAME:backend}"
+    account_name: "${AZURE_ACCOUNT_NAME:}"
+    account_key: "${AZURE_ACCOUNT_KEY:}"
+    connection_string: "${AZURE_CONNECTION_STRING:}"
+  azure_queue:
+    connection_string: "${CONNECTION_STRING:}"
+    index_queue_name: "${INDEX_QUEUE_NAME:}"
+
+event:
+  azure_hubs:
+    connection_string: "${AZURE_EVENT_HUBS_CONNECTION_STRING:}"
+    default_hub_name: "${AZURE_EVENT_DEFAULT_HUB_NAME:chat-index}"
+    index_hub_name: "${AZURE_EVENT_INDEX_HUB_NAME:chat-index}"
+    blob_connection_string: "${CONNECTION_STRING:}"
+    blob_container_name: "${AZURE_EVENT_BLOB_CONTAINER_NAME:event}"
+
+third_api:
+  openai:
+    key: "${OPENAI_KEY:}"
+    host: "${OPENAI_HOST:}"
+  eleventlabs:
+    key: "${ELEVEN_API_KEY:}"
+
+livekit:
+  bot_identity: "${LIVEKIT_NAME:KITT}"
+  url: "${LIVEKIT_URL:}"
+  api_key: "${LIVEKIT_API_KEY:}"
+  secret_key: "${LIVEKIT_SECRET_KEY:}"
+
+gcp_credentials:
+  path: "${GOOGLE_GCP_CREDENTIALS:}"
+
+
+

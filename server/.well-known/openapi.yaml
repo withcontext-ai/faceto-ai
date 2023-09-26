@@ -1,0 +1,130 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: ""
+    version: 0.0.1
+paths:
+    /v1/room/link:
+        post:
+            tags:
+                - Room
+            description: Through this interface, you can randomly obtain the link address of the video communication.
+            operationId: Room_Link
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/faceto.v1.RoomLinkRequest'
+                required: false
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/faceto.v1.RoomLinkReply'
+    /v1/room/transcript:
+        post:
+            tags:
+                - Room
+            description: After the user's video communication is completed, the conversation record of the video communication can be obtained through this interface.
+            operationId: Room_Transcript
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/interview.v1.RoomTranscriptRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/interview.v1.RoomTranscriptReply'
+
+components:
+    schemas:
+        faceto.v1.RoomLinkRequest:
+            type: object
+            properties:
+                prompt:
+                    $ref: '#/components/schemas/faceto.v1.RoomLinkRequest_Prompt'
+        faceto.v1.RoomLinkRequest_Prompt:
+            type: object
+            properties:
+                role:
+                    type: string
+                    description: The role of AI in the generated real-time video link
+                questions:
+                    type: array
+                    description: The questions list of AI need to ask user. The questions parameter is intended for the AI to ask the user, not the other way around.
+                    items:
+                        type: string
+                        description: The question text
+        faceto.v1.RoomLinkReply:
+            type: object
+            properties:
+                token:
+                    type: string
+                    description: The unique token of room
+                name:
+                    type: string
+                    description: The name of room
+                link:
+                    type: string
+                    description: The video link
+        interview.v1.RoomTranscriptRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: This parameter is the name returned by the interface `/v1/room/link`
+        interview.v1.RoomTranscriptReply:
+            type: object
+            properties:
+                version:
+                    type: string
+                room:
+                    $ref: '#/components/schemas/interview.v1.RoomTranscriptReply_Room'
+                transcript:
+                    $ref: '#/components/schemas/interview.v1.RoomTranscriptReply_Transcript'
+        interview.v1.RoomTranscriptReply_Room:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: room name
+                sid:
+                    type: string
+        interview.v1.RoomTranscriptReply_Transcript:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: uint32
+                    description: The total number of Transcript
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/interview.v1.Transcript_List'
+        interview.v1.Transcript_List:
+            type: object
+            properties:
+                is_bot:
+                    type: boolean
+                    description: Use this parameter to distinguish whether the current role is AI or user, true is AI, false is user.
+                name:
+                    type: string
+                    description: The name of the character currently speaking.
+                text:
+                    type: string
+                    description: The text currently speaking.
+                timestamp:
+                    type: string
+                    description: The timestamp currently speaking.
+tags:
+    - name: Room
+      description: The FaceTo API service definition.
