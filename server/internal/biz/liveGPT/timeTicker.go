@@ -3,7 +3,6 @@ package liveGPT
 import (
 	"bytes"
 	"context"
-	"faceto-ai/internal/biz"
 	"faceto-ai/internal/data/schema"
 	lksdk "github.com/livekit/server-sdk-go"
 	"github.com/pion/webrtc/v3"
@@ -60,36 +59,37 @@ func (p *GPTParticipant) transcriberTimeTicker(track *webrtc.TrackRemote, public
 		if p.lastActivity.IsZero() {
 			switch int(time.Since(p.subBeginTime).Seconds()) {
 			case 3:
-				greeting := &SpeechEvent{
-					ParticipantName: BotIdentity,
-					IsBot:           true,
-					Text:            languageText["greeting"],
-					Timestamp:       uint64(time.Now().Unix()),
-				}
-				p.lock.Lock()
-				p.events = append(p.events, &MeetingEvent{
-					Speech: greeting,
-				})
-				p.lock.Unlock()
-
-				// record user msg
-				userRoomMessage := &biz.RoomMessage{
-					Sid:             p.room.SID(),
-					ParticipantSID:  rp.SID(),
-					ParticipantName: BotIdentity,
-					Type:            biz.RoomMessageTypeBot,
-					EventTime:       time.Now(),
-					Text:            languageText["greeting"],
-				}
-				if err := p.roomMsgUC.Record(context.Background(), userRoomMessage); err != nil {
-					p.log.Errorf("failed to record user msg, err:%v, roomSID:%s, text:%s", err, p.room.SID(), languageText["greeting"])
-				}
-
-				p.initiativeSpeak(p.ctx, &InitiativeSpeak{
-					Sid:      rp.SID(),
-					Text:     languageText["greeting"],
-					Language: p.language,
-				}, nil)
+				// Remove AI greeting
+				//greeting := &SpeechEvent{
+				//	ParticipantName: BotIdentity,
+				//	IsBot:           true,
+				//	Text:            languageText["greeting"],
+				//	Timestamp:       uint64(time.Now().Unix()),
+				//}
+				//p.lock.Lock()
+				//p.events = append(p.events, &MeetingEvent{
+				//	Speech: greeting,
+				//})
+				//p.lock.Unlock()
+				//
+				//// record user msg
+				//userRoomMessage := &biz.RoomMessage{
+				//	Sid:             p.room.SID(),
+				//	ParticipantSID:  rp.SID(),
+				//	ParticipantName: BotIdentity,
+				//	Type:            biz.RoomMessageTypeBot,
+				//	EventTime:       time.Now(),
+				//	Text:            languageText["greeting"],
+				//}
+				//if err := p.roomMsgUC.Record(context.Background(), userRoomMessage); err != nil {
+				//	p.log.Errorf("failed to record user msg, err:%v, roomSID:%s, text:%s", err, p.room.SID(), languageText["greeting"])
+				//}
+				//
+				//p.initiativeSpeak(p.ctx, &InitiativeSpeak{
+				//	Sid:      rp.SID(),
+				//	Text:     languageText["greeting"],
+				//	Language: p.language,
+				//}, nil)
 			case 30:
 				p.initiativeSpeak(p.ctx, &InitiativeSpeak{
 					Sid:      rp.SID(),
