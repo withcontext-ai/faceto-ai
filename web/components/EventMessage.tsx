@@ -2,6 +2,15 @@ import { useDataChannel } from '@lizunlong/livekit-components-react';
 import { useCallback, useState } from 'react';
 import { EventPacket, Packet, PacketType } from '../lib/packet';
 import type { ReceivedDataMessage } from '@livekit/components-core';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from './ui/alert-dialog';
 
 export const EventMessage = () => {
   const [isCloseRoomAlertVisible, setIsCloseRoomAlertVisible] = useState(false);
@@ -19,5 +28,25 @@ export const EventMessage = () => {
 
   useDataChannel(undefined, onData);
 
-  return null
+  return <CloseRoomAlertDialog open={isCloseRoomAlertVisible} />;
 };
+
+function CloseRoomAlertDialog({ open }: { open: boolean }) {
+  function handleClick() {
+    window.close();
+  }
+
+  return (
+    <AlertDialog open={open}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Video Interaction Over</AlertDialogTitle>
+          <AlertDialogDescription>Video interaction is over, click the button below to leave the room</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogAction onClick={handleClick}>Leave</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
