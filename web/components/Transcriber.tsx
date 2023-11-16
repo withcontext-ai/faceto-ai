@@ -29,6 +29,8 @@ export const Transcriber = () => {
       } else if (packet.type == PacketType.State) {
         const statePacket = packet.data as StatePacket;
         setState(statePacket.state);
+      } else if (packet.type === PacketType.EventStopRoom) {
+        console.log('data:', packet.data);
       }
     },
     [state],

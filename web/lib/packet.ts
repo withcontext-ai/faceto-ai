@@ -2,6 +2,7 @@ export enum PacketType {
   Transcript = 0,
   State,
   Error,
+  EventStopRoom,
 }
 
 export enum GPTState {
