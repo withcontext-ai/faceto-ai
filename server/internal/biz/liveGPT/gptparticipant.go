@@ -459,6 +459,8 @@ func (p *GPTParticipant) RoomEvent() []*MeetingEvent {
 }
 
 func (p *GPTParticipant) SendStopEvent() error {
+	p.stopAndLeave <- struct{}{}
+	p.log.Debugf("SendStopEvent p.stopAndLeave push...")
 	return p.sendPacket(&packet{
 		Type: packet_EventStopRoom,
 		Data: &eventPacket{
