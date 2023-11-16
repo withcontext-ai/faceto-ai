@@ -25,6 +25,7 @@ const (
 	Room_RoomTranscriptOnline_FullMethodName = "/interview.v1.Room/RoomTranscriptOnline"
 	Room_RoomTranscript_FullMethodName       = "/interview.v1.Room/RoomTranscript"
 	Room_SetRoomVoice_FullMethodName         = "/interview.v1.Room/SetRoomVoice"
+	Room_RoomEvent_FullMethodName            = "/interview.v1.Room/RoomEvent"
 )
 
 // RoomClient is the client API for Room service.
@@ -43,6 +44,8 @@ type RoomClient interface {
 	RoomTranscript(ctx context.Context, in *RoomTranscriptRequest, opts ...grpc.CallOption) (*RoomTranscriptReply, error)
 	// Set Room Voice
 	SetRoomVoice(ctx context.Context, in *SetRoomVoiceRequest, opts ...grpc.CallOption) (*NilReply, error)
+	// Accept room event
+	RoomEvent(ctx context.Context, in *RoomEventRequest, opts ...grpc.CallOption) (*NilReply, error)
 }
 
 type roomClient struct {
@@ -107,6 +110,15 @@ func (c *roomClient) SetRoomVoice(ctx context.Context, in *SetRoomVoiceRequest, 
 	return out, nil
 }
 
+func (c *roomClient) RoomEvent(ctx context.Context, in *RoomEventRequest, opts ...grpc.CallOption) (*NilReply, error) {
+	out := new(NilReply)
+	err := c.cc.Invoke(ctx, Room_RoomEvent_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RoomServer is the server API for Room service.
 // All implementations must embed UnimplementedRoomServer
 // for forward compatibility
@@ -123,6 +135,8 @@ type RoomServer interface {
 	RoomTranscript(context.Context, *RoomTranscriptRequest) (*RoomTranscriptReply, error)
 	// Set Room Voice
 	SetRoomVoice(context.Context, *SetRoomVoiceRequest) (*NilReply, error)
+	// Accept room event
+	RoomEvent(context.Context, *RoomEventRequest) (*NilReply, error)
 	mustEmbedUnimplementedRoomServer()
 }
 
@@ -147,6 +161,9 @@ func (UnimplementedRoomServer) RoomTranscript(context.Context, *RoomTranscriptRe
 }
 func (UnimplementedRoomServer) SetRoomVoice(context.Context, *SetRoomVoiceRequest) (*NilReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetRoomVoice not implemented")
+}
+func (UnimplementedRoomServer) RoomEvent(context.Context, *RoomEventRequest) (*NilReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RoomEvent not implemented")
 }
 func (UnimplementedRoomServer) mustEmbedUnimplementedRoomServer() {}
 
@@ -269,6 +286,24 @@ func _Room_SetRoomVoice_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Room_RoomEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RoomEventRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RoomServer).RoomEvent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Room_RoomEvent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RoomServer).RoomEvent(ctx, req.(*RoomEventRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Room_ServiceDesc is the grpc.ServiceDesc for Room service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -299,6 +334,10 @@ var Room_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetRoomVoice",
 			Handler:    _Room_SetRoomVoice_Handler,
+		},
+		{
+			MethodName: "RoomEvent",
+			Handler:    _Room_RoomEvent_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

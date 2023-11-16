@@ -53,6 +53,7 @@ func NewHTTPServer(
 			middleware.AccessTokenValidate([]string{
 				faceToV1.OperationRoomLink,
 				roomV1.OperationRoomRoomTranscript,
+				roomV1.OperationRoomRoomEvent,
 
 				//roomV1.OperationRoomJoinRoom,
 				//roomV1.OperationRoomCheckRoom,

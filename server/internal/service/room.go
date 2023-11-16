@@ -575,3 +575,67 @@ func (s *RoomService) SetRoomVoice(ctx context.Context, in *v1.SetRoomVoiceReque
 	}
 	return &v1.NilReply{}, nil
 }
+
+func (s *RoomService) RoomEvent(ctx context.Context, in *v1.RoomEventRequest) (*v1.NilReply, error) {
+	s.log.Debugw("RoomService.RoomEvent", in)
+	if in.GetEvent() == nil {
+		return &v1.NilReply{}, nil
+	}
+
+	inEvent := in.GetEvent()
+	authGrant, err := middleware.AuthJWT(ctx)
+	if err != nil {
+		return nil, err
+	}
+	//if !authGrant.CanGetLink {
+	//	s.log.WithContext(ctx).Errorf("Link().authGrant.CanGetLink false")
+	//	logsnag.Event(ctx, logsnag.EventApplyLinkFailed.SetNotify().SetError("token authorization is not allowed."))
+	//	return nil, errorV1.ErrorForbidden("token authorization is not allowed.")
+	//}
+	if _, err := s.authUC.GetAuthByClientID(ctx, authGrant.ClientID); err != nil {
+		s.log.WithContext(ctx).Errorf("s.authUC.GetAuthByClientID err:%v", err)
+		return nil, errorV1.ErrorForbidden("token authorization error.")
+	}
+
+	// query livekit room config
+	listRes, err := s.roomService.ListRooms(ctx, &livekit.ListRoomsRequest{
+		Names: []string{
+			in.Name,
+		},
+	})
+	if err != nil {
+		s.log.WithContext(ctx).Errorf("error listing rooms, err:%v", err)
+		return nil, errorV1.ErrorBadRequest("list room err:%v", err)
+	}
+	if len(listRes.Rooms) == 0 {
+		return nil, errorV1.ErrorNotFound("room not found")
+	}
+	kittRoom := listRes.Rooms[0]
+
+	// query db room config
+	dbRoom, err := s.roomUC.GetByName(ctx, in.GetName())
+	if err != nil {
+		s.log.WithContext(ctx).Errorf("s.roomUC.GetByName err:%v", err)
+		return nil, errorV1.ErrorInternalServerError("room event handler err")
+	}
+
+	if dbRoom.Sid != kittRoom.GetSid() {
+		s.log.WithContext(ctx).Errorf("room sid not match, dbRoom.Sid:%s, room.GetSid:%s", dbRoom.Sid, kittRoom.GetSid())
+		return nil, errorV1.ErrorBadRequest("room sid not match")
+	}
+
+	// switch event
+	switch inEvent.GetEvent() {
+	case "CloseRoom":
+		if !dbRoom.IsInterviewing() {
+			s.log.WithContext(ctx).Errorf("dbRoom.status:%d", dbRoom.Status)
+			return nil, errorV1.ErrorInternalServerError("room status match err")
+		}
+		if err := s.participants[kittRoom.GetSid()].Participant.SendStopEvent(); err != nil {
+			s.log.WithContext(ctx).Errorf("Participant.SendStopEvent err:%v", err)
+			return nil, errorV1.ErrorInternalServerError("stop room err")
+		}
+	}
+
+	return &v1.NilReply{}, nil
+}

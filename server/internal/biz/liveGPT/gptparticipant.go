@@ -453,3 +453,19 @@ func (p *GPTParticipant) sendErrorPacket(message string) error {
 func (p *GPTParticipant) GetEvents() []*MeetingEvent {
 	return p.events
 }
+
+func (p *GPTParticipant) RoomEvent() []*MeetingEvent {
+	return p.events
+}
+
+func (p *GPTParticipant) SendStopEvent() error {
+	return p.sendPacket(&packet{
+		Type: packet_EventStopRoom,
+		Data: &eventPacket{
+			Sid:   p.room.SID(),
+			Name:  p.room.Name(),
+			Event: "CloseRoom",
+			Text:  "Video Interaction Over.",
+		},
+	})
+}

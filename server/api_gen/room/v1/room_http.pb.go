@@ -22,6 +22,7 @@ const _ = http.SupportPackageIsVersion1
 const OperationRoomCheckRoom = "/interview.v1.Room/CheckRoom"
 const OperationRoomHealth = "/interview.v1.Room/Health"
 const OperationRoomJoinRoom = "/interview.v1.Room/JoinRoom"
+const OperationRoomRoomEvent = "/interview.v1.Room/RoomEvent"
 const OperationRoomRoomTranscript = "/interview.v1.Room/RoomTranscript"
 const OperationRoomRoomTranscriptOnline = "/interview.v1.Room/RoomTranscriptOnline"
 const OperationRoomSetRoomVoice = "/interview.v1.Room/SetRoomVoice"
@@ -33,6 +34,8 @@ type RoomHTTPServer interface {
 	Health(context.Context, *HealthRequest) (*HelloReply, error)
 	// JoinRoom JoinRoom local join room
 	JoinRoom(context.Context, *JoinRoomRequest) (*JoinRoomReply, error)
+	// RoomEvent Accept room event
+	RoomEvent(context.Context, *RoomEventRequest) (*NilReply, error)
 	// RoomTranscript RoomTranscript. Get room transcript in real time or cache, compatible with above interface
 	RoomTranscript(context.Context, *RoomTranscriptRequest) (*RoomTranscriptReply, error)
 	// RoomTranscriptOnline RoomTranscript. Get conversation transcripts in real time
@@ -49,6 +52,7 @@ func RegisterRoomHTTPServer(s *http.Server, srv RoomHTTPServer) {
 	r.POST("/{name}/transcript", _Room_RoomTranscriptOnline0_HTTP_Handler(srv))
 	r.POST("/v1/room/transcript", _Room_RoomTranscript0_HTTP_Handler(srv))
 	r.POST("/v1/room/set_voice", _Room_SetRoomVoice0_HTTP_Handler(srv))
+	r.POST("/v1/room/{name}/event", _Room_RoomEvent0_HTTP_Handler(srv))
 }
 
 func _Room_Health0_HTTP_Handler(srv RoomHTTPServer) func(ctx http.Context) error {
@@ -174,10 +178,33 @@ func _Room_SetRoomVoice0_HTTP_Handler(srv RoomHTTPServer) func(ctx http.Context)
 	}
 }
 
+func _Room_RoomEvent0_HTTP_Handler(srv RoomHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in RoomEventRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationRoomRoomEvent)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.RoomEvent(ctx, req.(*RoomEventRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*NilReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type RoomHTTPClient interface {
 	CheckRoom(ctx context.Context, req *CheckRoomRequest, opts ...http.CallOption) (rsp *CheckRoomReply, err error)
 	Health(ctx context.Context, req *HealthRequest, opts ...http.CallOption) (rsp *HelloReply, err error)
 	JoinRoom(ctx context.Context, req *JoinRoomRequest, opts ...http.CallOption) (rsp *JoinRoomReply, err error)
+	RoomEvent(ctx context.Context, req *RoomEventRequest, opts ...http.CallOption) (rsp *NilReply, err error)
 	RoomTranscript(ctx context.Context, req *RoomTranscriptRequest, opts ...http.CallOption) (rsp *RoomTranscriptReply, err error)
 	RoomTranscriptOnline(ctx context.Context, req *RoomTranscriptRequest, opts ...http.CallOption) (rsp *RoomTranscriptReply, err error)
 	SetRoomVoice(ctx context.Context, req *SetRoomVoiceRequest, opts ...http.CallOption) (rsp *NilReply, err error)
@@ -222,6 +249,19 @@ func (c *RoomHTTPClientImpl) JoinRoom(ctx context.Context, in *JoinRoomRequest, 
 	pattern := "/join/{name}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationRoomJoinRoom))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *RoomHTTPClientImpl) RoomEvent(ctx context.Context, in *RoomEventRequest, opts ...http.CallOption) (*NilReply, error) {
+	var out NilReply
+	pattern := "/v1/room/{name}/event"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationRoomRoomEvent))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {

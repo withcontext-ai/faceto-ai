@@ -1250,6 +1250,137 @@ var _ interface {
 	ErrorName() string
 } = SetRoomVoiceRequestValidationError{}
 
+// Validate checks the field values on RoomEventRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *RoomEventRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on RoomEventRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// RoomEventRequestMultiError, or nil if none found.
+func (m *RoomEventRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *RoomEventRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Name
+
+	if all {
+		switch v := interface{}(m.GetEvent()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, RoomEventRequestValidationError{
+					field:  "Event",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, RoomEventRequestValidationError{
+					field:  "Event",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetEvent()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return RoomEventRequestValidationError{
+				field:  "Event",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return RoomEventRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// RoomEventRequestMultiError is an error wrapping multiple validation errors
+// returned by RoomEventRequest.ValidateAll() if the designated constraints
+// aren't met.
+type RoomEventRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RoomEventRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RoomEventRequestMultiError) AllErrors() []error { return m }
+
+// RoomEventRequestValidationError is the validation error returned by
+// RoomEventRequest.Validate if the designated constraints aren't met.
+type RoomEventRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RoomEventRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RoomEventRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RoomEventRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RoomEventRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RoomEventRequestValidationError) ErrorName() string { return "RoomEventRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e RoomEventRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRoomEventRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RoomEventRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RoomEventRequestValidationError{}
+
 // Validate checks the field values on RoomTranscriptReply_Transcript with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -1721,3 +1852,109 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = RoomTranscriptReply_Transcript_ListValidationError{}
+
+// Validate checks the field values on RoomEventRequest_Event with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *RoomEventRequest_Event) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on RoomEventRequest_Event with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// RoomEventRequest_EventMultiError, or nil if none found.
+func (m *RoomEventRequest_Event) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *RoomEventRequest_Event) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Event
+
+	// no validation rules for Status
+
+	if len(errors) > 0 {
+		return RoomEventRequest_EventMultiError(errors)
+	}
+
+	return nil
+}
+
+// RoomEventRequest_EventMultiError is an error wrapping multiple validation
+// errors returned by RoomEventRequest_Event.ValidateAll() if the designated
+// constraints aren't met.
+type RoomEventRequest_EventMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RoomEventRequest_EventMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RoomEventRequest_EventMultiError) AllErrors() []error { return m }
+
+// RoomEventRequest_EventValidationError is the validation error returned by
+// RoomEventRequest_Event.Validate if the designated constraints aren't met.
+type RoomEventRequest_EventValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RoomEventRequest_EventValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RoomEventRequest_EventValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RoomEventRequest_EventValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RoomEventRequest_EventValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RoomEventRequest_EventValidationError) ErrorName() string {
+	return "RoomEventRequest_EventValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e RoomEventRequest_EventValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRoomEventRequest_Event.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RoomEventRequest_EventValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RoomEventRequest_EventValidationError{}

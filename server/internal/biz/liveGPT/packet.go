@@ -4,9 +4,10 @@ package liveGPT
 type packetType int32
 
 const (
-	packet_Transcript packetType = 0
-	packet_State      packetType = 1
-	packet_Error      packetType = 2 // Show an error message to the user screen
+	packet_Transcript    packetType = 0
+	packet_State         packetType = 1
+	packet_Error         packetType = 2 // Show an error message to the user screen
+	packet_EventStopRoom packetType = 3 // Stop Room Alert
 )
 
 type gptState int32
@@ -36,4 +37,11 @@ type statePacket struct {
 
 type errorPacket struct {
 	Message string `json:"message"`
+}
+
+type eventPacket struct {
+	Sid   string `json:"sid"`
+	Name  string `json:"name"`
+	Event string `json:"event"`
+	Text  string `json:"text"`
 }
