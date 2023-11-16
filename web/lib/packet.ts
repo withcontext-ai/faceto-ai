@@ -2,7 +2,7 @@ export enum PacketType {
   Transcript = 0,
   State,
   Error,
-  EventStopRoom,
+  Event,
 }
 
 export enum GPTState {
@@ -14,7 +14,7 @@ export enum GPTState {
 
 export interface Packet {
   type: PacketType;
-  data: TranscriptPacket | StatePacket | ErrorPacket;
+  data: TranscriptPacket | StatePacket | ErrorPacket | EventPacket;
 }
 
 export interface TranscriptPacket {
@@ -30,4 +30,11 @@ export interface StatePacket {
 
 export interface ErrorPacket {
   message: string;
+}
+
+export interface EventPacket {
+  event: 'CloseRoom';
+  name: string;
+  sid: string;
+  text: string;
 }

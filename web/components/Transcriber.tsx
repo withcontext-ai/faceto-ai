@@ -14,7 +14,6 @@ export const Transcriber = () => {
     (message: ReceivedDataMessage) => {
       const decoder = new TextDecoder();
       const packet = JSON.parse(decoder.decode(message.payload)) as Packet;
-      console.log('packet:', packet);
       if (packet.type == PacketType.Transcript) {
         const transcript = packet.data as TranscriptPacket;
         const sid = transcript.sid;
@@ -29,8 +28,6 @@ export const Transcriber = () => {
       } else if (packet.type == PacketType.State) {
         const statePacket = packet.data as StatePacket;
         setState(statePacket.state);
-      } else if (packet.type === PacketType.EventStopRoom) {
-        console.log('data:', packet.data);
       }
     },
     [state],
