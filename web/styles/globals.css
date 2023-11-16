@@ -37,10 +37,10 @@
   }
 
   .dark {
-    /* --background: 222.2 84% 4.9%; */
-    --background: var(--lk-bg);
-    /* --foreground: 210 40% 98%; */
-    --foreground: var(--lk-fg);
+    --background: 222.2 84% 4.9%;
+    /* --background: var(--lk-bg); */
+    --foreground: 210 40% 98%;
+    /* --foreground: var(--lk-fg); */
 
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
@@ -54,10 +54,10 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
 
-    /* --primary: 210 40% 98%; */
-    --primary: var(--lk-bg);
-    /* --primary-foreground: 222.2 47.4% 11.2%; */
-    --primary-foreground: var(--lk-fg);
+    --primary: 210 40% 98%;
+    /* --primary: var(--lk-bg); */
+    --primary-foreground: 222.2 47.4% 11.2%;
+    /* --primary-foreground: var(--lk-fg); */
 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;

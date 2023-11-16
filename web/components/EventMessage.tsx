@@ -41,7 +41,9 @@ function CloseRoomAlertDialog({ open }: { open: boolean }) {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Video Interaction Over</AlertDialogTitle>
-          <AlertDialogDescription>Video interaction is over, click the button below to leave the room</AlertDialogDescription>
+          <AlertDialogDescription>
+            Video interaction is over, click the button below to leave the room
+          </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogAction onClick={handleClick}>Leave</AlertDialogAction>
