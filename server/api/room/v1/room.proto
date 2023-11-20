@@ -57,6 +57,14 @@ service Room {
       body:"*",
     };
   }
+
+  // Accept room event
+  rpc RoomEvent (RoomEventRequest) returns (NilReply) {
+    option (google.api.http) = {
+      post: "/v1/room/{name}/event",
+      body:"*",
+    };
+  }
 }
 
 message HelloReply {
@@ -135,4 +143,13 @@ message RoomTranscriptReply {
 message SetRoomVoiceRequest {
   string room_name = 1 [json_name="room_name"];
   string voice_id = 2 [json_name="voice_id"];
+}
+
+message RoomEventRequest {
+  message Event {
+    string event = 1;
+    int32 status = 2;
+  }
+  string name = 1;
+  Event event = 2;
 }

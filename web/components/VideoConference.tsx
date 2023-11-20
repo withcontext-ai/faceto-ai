@@ -21,6 +21,7 @@ import { usePinnedTracks } from '../hooks/usePinnedTracks';
 import { GPTTile } from './GPTTile';
 import { Transcriber } from './Transcriber';
 import { ErrorMessage } from './ErrorMessage';
+import { EventMessage } from './EventMessage';
 
 const BotIdentity = 'KITT';
 
@@ -99,6 +100,7 @@ export function VideoConference({ chatMessageFormatter, botName = BotIdentity, .
       <Transcriber />
       <RoomAudioRenderer />
       <ConnectionStateToast />
+      <EventMessage />
     </div>
   );
 }

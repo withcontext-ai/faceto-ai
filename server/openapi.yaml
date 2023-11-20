@@ -183,6 +183,31 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/interview.v1.RoomTranscriptReply'
+    /v1/room/{name}/event:
+        post:
+            tags:
+                - Room
+            description: Accept room event
+            operationId: Room_RoomEvent
+            parameters:
+                - name: name
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/interview.v1.RoomEventRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/interview.v1.NilReply'
     /v1/token:
         post:
             tags:
@@ -464,6 +489,21 @@ components:
         interview.v1.NilReply:
             type: object
             properties: {}
+        interview.v1.RoomEventRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                event:
+                    $ref: '#/components/schemas/interview.v1.RoomEventRequest_Event'
+        interview.v1.RoomEventRequest_Event:
+            type: object
+            properties:
+                event:
+                    type: string
+                status:
+                    type: integer
+                    format: int32
         interview.v1.RoomTranscriptReply:
             type: object
             properties:
