@@ -211,7 +211,7 @@ func (s *FaceToService) RedirectUriHandler(ctx context.Context, req *v1.AuthRedi
 }
 
 func (s *FaceToService) Auth(ctx context.Context, in *v1.AuthRequest) (*v1.AuthReply, error) {
-	s.log.Debugw("FaceToService.Auth in", in)
+	s.log.WithContext(ctx).Debugw("FaceToService.Auth in", in)
 	if in.GetRefreshToken() != "" {
 		return s.AuthExchange(ctx, &v1.AuthExchangeRequest{
 			RefreshToken: in.GetRefreshToken(),

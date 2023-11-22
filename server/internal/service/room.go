@@ -577,7 +577,7 @@ func (s *RoomService) SetRoomVoice(ctx context.Context, in *v1.SetRoomVoiceReque
 }
 
 func (s *RoomService) RoomEvent(ctx context.Context, in *v1.RoomEventRequest) (*v1.NilReply, error) {
-	s.log.Debugw("RoomService.RoomEvent", in)
+	s.log.WithContext(ctx).Debugw("RoomService.RoomEvent", in)
 	if in.GetEvent() == nil {
 		return &v1.NilReply{}, nil
 	}
@@ -628,11 +628,11 @@ func (s *RoomService) RoomEvent(ctx context.Context, in *v1.RoomEventRequest) (*
 	switch inEvent.GetEvent() {
 	case "CloseRoom":
 		if !dbRoom.IsInterviewing() {
-			s.log.WithContext(ctx).Errorf("dbRoom.status:%d", dbRoom.Status)
+			s.log.WithContext(ctx).Errorf("roomName:%s, dbRoom.status:%d", in.GetName(), dbRoom.Status)
 			return nil, errorV1.ErrorInternalServerError("room status match err")
 		}
-		if err := s.participants[kittRoom.GetSid()].Participant.SendStopEvent(); err != nil {
-			s.log.WithContext(ctx).Errorf("Participant.SendStopEvent err:%v", err)
+		if err := s.participants[kittRoom.GetSid()].Participant.SendStopEvent(ctx); err != nil {
+			s.log.WithContext(ctx).Errorf("roomName:%s, Participant.SendStopEvent err:%v", in.GetName(), err)
 			return nil, errorV1.ErrorInternalServerError("stop room err")
 		}
 	}

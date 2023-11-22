@@ -458,10 +458,8 @@ func (p *GPTParticipant) RoomEvent() []*MeetingEvent {
 	return p.events
 }
 
-func (p *GPTParticipant) SendStopEvent() error {
-	p.stopAndLeave <- struct{}{}
-	p.log.Debugf("SendStopEvent p.stopAndLeave push...")
-	return p.sendPacket(&packet{
+func (p *GPTParticipant) SendStopEvent(ctx context.Context) error {
+	if err := p.sendPacket(&packet{
 		Type: packet_EventStopRoom,
 		Data: &eventPacket{
 			Sid:   p.room.SID(),
@@ -469,5 +467,11 @@ func (p *GPTParticipant) SendStopEvent() error {
 			Event: "CloseRoom",
 			Text:  "Video Interaction Over.",
 		},
-	})
+	}); err != nil {
+		p.log.WithContext(ctx).Errorf("SendStopEvent p.sendPacket.err:%v", err)
+		return err
+	}
+	p.stopAndLeave <- struct{}{}
+	p.log.WithContext(ctx).Debugf("SendStopEvent roomName:%s, p.stopAndLeave push...", p.room.Name())
+	return nil
 }
