@@ -21,8 +21,8 @@ dependencies:
     specifier: ^0.6.6
     version: 0.6.15(livekit-client@1.7.1)
   '@lizunlong/livekit-components-react':
-    specifier: ^1.0.2-beta.18
-    version: 1.0.2-beta.18(livekit-client@1.7.1)(react-dom@18.2.0)(react-hot-toast@2.4.1)(react@18.2.0)
+    specifier: ^1.0.2-beta.19
+    version: 1.0.2-beta.19(livekit-client@1.7.1)(react-dom@18.2.0)(react-hot-toast@2.4.1)(react@18.2.0)
   '@lizunlong/livekit-components-styles':
     specifier: ^1.0.0-beta.8
     version: 1.0.0-beta.8
@@ -1498,8 +1498,8 @@ packages:
       rxjs: 7.8.1
     dev: false
 
-  /@lizunlong/livekit-components-react@1.0.2-beta.18(livekit-client@1.7.1)(react-dom@18.2.0)(react-hot-toast@2.4.1)(react@18.2.0):
-    resolution: {integrity: sha512-Vf64I1kp8DqTgS470H9XXPZHmFtsz0MyN9uBmMlmaS86L9+hX79/iGsORGddld58ux21V5wZkjwex9K+Gv2+wA==}
+  /@lizunlong/livekit-components-react@1.0.2-beta.19(livekit-client@1.7.1)(react-dom@18.2.0)(react-hot-toast@2.4.1)(react@18.2.0):
+    resolution: {integrity: sha512-+AD6oPYJYKgNi4XINmKTp7Fx9AKwqqpWzSxVBQ+Z+EIG0UbNFZr+hvOdfVM+trGGeQ7E1xvbor8pFDJaWAOrUQ==}
     engines: {node: '>=14'}
     peerDependencies:
       livekit-client: ^1.7.0

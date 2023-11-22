@@ -14,7 +14,7 @@
     "@emotion/react": "11.10.6",
     "@emotion/styled": "11.10.6",
     "@livekit/components-core": "^0.6.6",
-    "@lizunlong/livekit-components-react": "^1.0.2-beta.18",
+    "@lizunlong/livekit-components-react": "^1.0.2-beta.19",
     "@lizunlong/livekit-components-styles": "^1.0.0-beta.8",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.3",
