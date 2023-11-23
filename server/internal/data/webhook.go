@@ -202,7 +202,7 @@ func (w *liveGPTWebhook) Consumer() {
 					Response:         &WebhookReply{},
 					IsRetry:          true,
 					Headers:          reqHeader,
-					Timeout:          time.Duration(3) * time.Second,
+					Timeout:          time.Duration(10) * time.Second,
 					RetryCount:       3, // retry 3 times
 					RetryWaitTime:    time.Duration(200) * time.Millisecond,
 					RetryMaxWaitTime: time.Duration(3) * time.Second,
