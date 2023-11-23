@@ -9,6 +9,7 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/livekit/protocol/livekit"
 	"github.com/livekit/protocol/webhook"
+	"github.com/pkg/errors"
 	"net/http"
 	"strings"
 	"time"
@@ -173,8 +174,19 @@ func (ru *RoomWebhookUseCase) EventRoomStarted(ctx context.Context, event *livek
 }
 
 func (ru *RoomWebhookUseCase) EventTrackPublished(ctx context.Context, event *livekit.WebhookEvent) error {
-	if event.Participant.Identity != ru.confLiveKit.BotIdentity {
-		ru.log.WithContext(ctx).Debugf("EventTrackPublished, event.Participant.Identity != BotIdentity")
+
+	link, err := ru.linkUC.GetLinkByName(ctx, event.Room.GetName())
+	if err != nil {
+		ru.log.WithContext(ctx).Errorf("error get link config by name, err:%v", err)
+		return errors.Wrap(err, "error get link config by name")
+	}
+	botIdentity := link.GetConfigBotName()
+	if botIdentity == "" {
+		botIdentity = ru.confLiveKit.BotIdentity
+	}
+
+	if event.Participant.Identity != botIdentity {
+		ru.log.WithContext(ctx).Debugf("EventTrackPublished, event.Participant.Identity:%s != BotIdentity:%s", event.Participant.Identity, botIdentity)
 		return nil
 	}
 
