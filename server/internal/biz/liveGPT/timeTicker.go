@@ -30,34 +30,34 @@ func (p *GPTParticipant) transcriberTimeTicker(track *webrtc.TrackRemote, public
 		languageText["greeting"] = apiConfig.Greeting
 	}
 
-	limitDuration := schema.Duration
-	if apiConfig.Duration > 0 {
-		limitDuration = int(apiConfig.Duration)
-	}
+	//limitDuration := schema.Duration
+	//if apiConfig.Duration > 0 {
+	//	limitDuration = int(apiConfig.Duration)
+	//}
 
 	// time ticker
 	for _ = range transcriber.timeTicker.C {
 		// the conversation limit duration
-		switch int(time.Since(p.subBeginTime).Seconds()) {
-		case limitDuration - 30: // Give a 30-second warning
-			p.initiativeSpeak(p.ctx, &InitiativeSpeak{
-				Sid:      rp.SID(),
-				Text:     "This video conversation will end in 30 seconds",
-				Language: p.language,
-			}, nil)
-		case limitDuration:
-			p.initiativeSpeak(p.ctx, &InitiativeSpeak{
-				Sid:      rp.SID(),
-				Text:     languageText["end"],
-				Language: p.language,
-			}, func() {
-				go func() {
-					time.Sleep(3 * time.Second)
-					p.trackUnsubscribed(track, publication, rp)
-					p.disconnected()
-				}()
-			})
-		}
+		//switch int(time.Since(p.subBeginTime).Seconds()) {
+		//case limitDuration - 30: // Give a 30-second warning
+		//	p.initiativeSpeak(p.ctx, &InitiativeSpeak{
+		//		Sid:      rp.SID(),
+		//		Text:     "This video conversation will end in 30 seconds",
+		//		Language: p.language,
+		//	}, nil)
+		//case limitDuration:
+		//	p.initiativeSpeak(p.ctx, &InitiativeSpeak{
+		//		Sid:      rp.SID(),
+		//		Text:     languageText["end"],
+		//		Language: p.language,
+		//	}, func() {
+		//		go func() {
+		//			time.Sleep(3 * time.Second)
+		//			p.trackUnsubscribed(track, publication, rp)
+		//			p.disconnected()
+		//		}()
+		//	})
+		//}
 
 		if p.lastActivity.IsZero() {
 			switch int(time.Since(p.subBeginTime).Seconds()) {
@@ -94,13 +94,13 @@ func (p *GPTParticipant) transcriberTimeTicker(track *webrtc.TrackRemote, public
 						Language: p.language,
 					}, nil)
 				}
-			case 30:
+			case 60:
 				p.initiativeSpeak(p.ctx, &InitiativeSpeak{
 					Sid:      rp.SID(),
 					Text:     languageText["notice"],
 					Language: p.language,
 				}, nil)
-			case 60:
+			case 120:
 				p.initiativeSpeak(p.ctx, &InitiativeSpeak{
 					Sid:      rp.SID(),
 					Text:     languageText["end"],
@@ -117,13 +117,13 @@ func (p *GPTParticipant) transcriberTimeTicker(track *webrtc.TrackRemote, public
 		}
 
 		switch int(time.Since(p.lastActivity).Seconds()) {
-		case 30:
+		case 60:
 			p.initiativeSpeak(p.ctx, &InitiativeSpeak{
 				Sid:      rp.SID(),
 				Text:     languageText["notice"],
 				Language: p.language,
 			}, nil)
-		case 60:
+		case 120:
 			p.initiativeSpeak(p.ctx, &InitiativeSpeak{
 				Sid:      rp.SID(),
 				Text:     languageText["end"],
