@@ -261,6 +261,7 @@ func (p *GPTParticipant) answer(events []*MeetingEvent, prompt *SpeechEvent,
 				return strings.TrimSpace(sb.String()), nil
 			}
 
+			p.log.Errorf("Sorry, an error occured while communicating with OpenAI. It can happen when the servers are overloaded, room:%s, err:%v", p.room.Name(), err)
 			_ = p.sendErrorPacket("Sorry, an error occured while communicating with OpenAI. It can happen when the servers are overloaded")
 			return "", err
 		}
